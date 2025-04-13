@@ -1,3 +1,4 @@
+
 import java.util.Objects;
 
 public class Employee {
@@ -9,7 +10,7 @@ public class Employee {
     private int department;
     private double salary;
 
-    public Employee(String fullName, int department, double salary){
+    public Employee(String fullName, int department, double salary) {
         id = idCounter++;
         this.fullName = fullName;
         this.department = department;
@@ -55,10 +56,11 @@ public class Employee {
     @Override
     public String toString() {
         return
-                "id - " + id +
+                "id:" + id +
                         " | " + fullName + " |" +
-                        " департамент №" + department +" |"+
+                        " департамент №" + department + " |" +
                         " зарплата = " + salary +
                         ';';
     }
+
 }
