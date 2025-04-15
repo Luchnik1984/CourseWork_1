@@ -56,7 +56,7 @@ public class Main {
         percentageOfSalaryIndexation = 20; // Процент индексации зп в отделе
         indexingSalariesInDepartment(targetDepartment, percentageOfSalaryIndexation);
         printDepartmentEmployees(targetDepartment);
-        int targetSalary = 85000; // число для вывода сотрудников с меньшей и большей или равной этому числу ЗП
+        int targetSalary = 150000; // число для вывода сотрудников с меньшей и большей или равной этому числу ЗП
         printFilteredEmployeesWithLowestSalary(targetSalary);
         printFilteredEmployeesWithHighestSalary(targetSalary);
 
@@ -197,7 +197,7 @@ public class Main {
             }
         }
         if (!found) {
-            System.out.println("В отделе №" + salary + " нет сотрудников.");
+            System.out.println("Сотрудников с зарплатой меньше " + salary + " не найдено");
         }
     }
 
@@ -213,7 +213,7 @@ public class Main {
             }
         }
         if (!found) {
-            System.out.println("В отделе №" + salary + " нет сотрудников.");
+            System.out.println("Сотрудников с зарплатой больше или равной " + salary + " не найдено.");
         }
     }
 }
