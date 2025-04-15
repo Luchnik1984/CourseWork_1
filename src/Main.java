@@ -1,6 +1,3 @@
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Main {
@@ -43,31 +40,25 @@ public class Main {
         indexingAllSalaries(percentageOfSalaryIndexation);
         printEmployees();
 
-        int targetDepartment = 5; // Номер отдела для анализа
-        Employee[] employeesInDepartment = filterByDepartment(targetDepartment);
+        int targetDepartment = 4; // Номер отдела для анализа
+        System.out.println("\n Сотрудник с наименьшей зарплатой в отделе №" + targetDepartment + " это - "
+                + lookingEmployeeWithLowestSalaryInDepartment(targetDepartment));
+        System.out.println("\n Сотрудник с наибольшей зарплатой в отделе №" + targetDepartment + " это - "
+                + lookingEmployeeWithHighestSalaryInDepartment(targetDepartment));
 
-        System.out.println("\n Сотрудник с наименьшей зарплатой в отделе №"+targetDepartment+" это - "
-                +lookingEmployeeWithLowestSalaryInDepartment(List.of(employeesInDepartment)));
-        System.out.println("\n Сотрудник с наибольшей зарплатой в отделе №"+targetDepartment+" это - "
-                +lookingEmployeeWithHighestSalaryInDepartment(List.of(employeesInDepartment)));
+        System.out.println("\nСумма затрат на ЗП в отделе №" + targetDepartment + " в месяц = "
+                + salaryCostsInMonthByDepartment(targetDepartment));
 
-        System.out.println("\nСумма затрат на ЗП в отделе №"+targetDepartment+" в месяц = "
-                +salaryCostsInMonthByDepartment(List.of(employeesInDepartment)));
+        System.out.println("\nСреднее значение зарплат в отделе №" + targetDepartment + " в месяц = "
+                + calculateAverageSalaryInMonthByDepartment(targetDepartment));
 
-        System.out.println("\nСреднее значение зарплат в отделе №"+targetDepartment+" в месяц = "
-                +calculateAverageSalaryInMonthByDepartment(List.of(employeesInDepartment)));
-
-
+        printDepartmentEmployees(targetDepartment);
         percentageOfSalaryIndexation = 20; // Процент индексации зп в отделе
-        indexingSalariesInDepartment(List.of(employeesInDepartment),percentageOfSalaryIndexation);
-        printDepartmentEmployees(targetDepartment, List.of(employeesInDepartment));
-
-        int targetSalary = 75000; // число для вывода сотрудников с меньшей и большей или равной этому числу ЗП
-
-        printFilteredEmployeesWithLowestSalary(List.of(filterWithLowestSalary(targetSalary)), targetSalary);
-        printFilteredEmployeesWithHighestSalary(List.of(filterWithHighestSalary(targetSalary)),targetSalary);
-
-
+        indexingSalariesInDepartment(targetDepartment, percentageOfSalaryIndexation);
+        printDepartmentEmployees(targetDepartment);
+        int targetSalary = 85000; // число для вывода сотрудников с меньшей и большей или равной этому числу ЗП
+        printFilteredEmployeesWithLowestSalary(targetSalary);
+        printFilteredEmployeesWithHighestSalary(targetSalary);
 
     }
 
@@ -116,121 +107,113 @@ public class Main {
         }
     }
 
-    private static void indexingAllSalaries(double index) {
-                      for (Employee employee : EMPLOYEES) {
-            employee.setSalary(Math.ceil(employee.getSalary() * (1 + (index) / 100)));
+    private static void indexingAllSalaries(double indexPercentage) {
+        for (Employee employee : EMPLOYEES) {
+            employee.setSalary(Math.ceil(employee.getSalary() * (1 + (indexPercentage) / 100)));
         }
     }
 
-    private static Employee[] filterByDepartment( int numberDepartment) {
-        List<Employee> filteredEmployees = new ArrayList<>();
-                  for (Employee employee : EMPLOYEES) {
-                if (employee != null && employee.getDepartment() == numberDepartment) {
-                    filteredEmployees.add(employee);
+    private static Employee lookingEmployeeWithLowestSalaryInDepartment(int departmentNumber) {
+        Employee employeeWithLowestSalary = null;
+
+        for (Employee employee : EMPLOYEES) {
+            if (employee != null && employee.getDepartment() == departmentNumber) {
+                if (employeeWithLowestSalary == null || employee.getSalary() < employeeWithLowestSalary.getSalary()) {
+                    employeeWithLowestSalary = employee;
                 }
             }
-              return filteredEmployees.toArray(new Employee[0]);
-    }
-
-    private static Employee lookingEmployeeWithLowestSalaryInDepartment(List<Employee> employeesInDepartment) {
-        Employee employeeWithLowestSalary = null;
-        for (Employee employee : employeesInDepartment) {
-            if (employeeWithLowestSalary == null || employee.getSalary() < employeeWithLowestSalary.getSalary()) {
-                employeeWithLowestSalary = employee;
-            }
         }
+
         return employeeWithLowestSalary;
     }
 
-    private static Employee lookingEmployeeWithHighestSalaryInDepartment(List<Employee> employeesInDepartment) {
+    private static Employee lookingEmployeeWithHighestSalaryInDepartment(int departmentNumber) {
+        Employee employeeWithHighestSalary = null;
 
-                    Employee employeeWithHighestSalary = null;
-            for (Employee employee : employeesInDepartment) {
-                if (employeeWithHighestSalary == null || employee.getSalary() > employeeWithHighestSalary.getSalary()) {
+        for (Employee employee : EMPLOYEES) {
+            if (employee != null && employee.getDepartment() == departmentNumber) {
+                if (employeeWithHighestSalary == null || employee.getDepartment() == departmentNumber && employee.getSalary() > employeeWithHighestSalary.getSalary()) {
                     employeeWithHighestSalary = employee;
                 }
             }
-            return employeeWithHighestSalary;
         }
+        return employeeWithHighestSalary;
+    }
 
-    private static double salaryCostsInMonthByDepartment(List<Employee> employeesInDepartment) {
+    private static double salaryCostsInMonthByDepartment(int departmentNumber) {
         double sum = 0;
-        for (Employee employee : employeesInDepartment) {
-            sum += employee.getSalary();
+        for (Employee employee : EMPLOYEES) {
+            if (employee != null && employee.getDepartment() == departmentNumber) {
+                sum += employee.getSalary();
+            }
         }
         return sum;
     }
 
-    private static double calculateAverageSalaryInMonthByDepartment(List<Employee> employeesInDepartment) {
-               if (!employeesInDepartment.isEmpty()){
-        return salaryCostsInMonthByDepartment(employeesInDepartment) / employeesInDepartment.size();}
-        return 0;
+
+    private static double calculateAverageSalaryInMonthByDepartment(int departmentNumber) {
+        int employeeInDepartment = 0;
+        for (Employee employee : EMPLOYEES) {
+            if (employee != null && employee.getDepartment() == departmentNumber) {
+                employeeInDepartment++;
+            }
+        }
+        return salaryCostsInMonthByDepartment(departmentNumber) / employeeInDepartment;
     }
 
-    private static void indexingSalariesInDepartment(List<Employee> employeesInDepartment,double index) {
-                 for (Employee employee : employeesInDepartment) {
-            employee.setSalary(Math.ceil(employee.getSalary() * (1 + (index) / 100)));
+
+    private static void indexingSalariesInDepartment(int departmentNumber, double indexPercentage) {
+        for (Employee employee : EMPLOYEES) {
+            if (employee != null && employee.getDepartment() == departmentNumber) {
+                employee.setSalary(Math.ceil(employee.getSalary() * (1 + (indexPercentage) / 100)));
+            }
         }
     }
 
+    private static void printDepartmentEmployees(int department) {
+        System.out.println("\nОтдел №" + department);
+        boolean found = false;
 
-    public static void printDepartmentEmployees(int targetDepartment, List<Employee> employeesInDepartment) {
-        System.out.println("\nОтдел №" + targetDepartment);
-        if (employeesInDepartment != null && !employeesInDepartment.isEmpty()) {
-            for (Employee employee : employeesInDepartment) {
+        for (Employee employee : EMPLOYEES) {
+            if (employee != null && employee.getDepartment() == department) {
                 System.out.println("id:" + employee.getId() + " | " + employee.getFullName() + " | зарплата = " + employee.getSalary());
+                found = true;
             }
-        } else {
-            System.out.println("В отделе №" + targetDepartment + " нет сотрудников.");
+        }
+        if (!found) {
+            System.out.println("В отделе №" + department + " нет сотрудников.");
         }
     }
 
+    private static void printFilteredEmployeesWithLowestSalary(int salary) {
+        System.out.println("\nПоиск сотрудников  с зарплатой меньше " + salary + " :");
 
-    private static Employee[] filterWithLowestSalary( int salary) {
-        List<Employee> filteredEmployees = new ArrayList<>();
-       // if (EMPLOYEES!=null)
-        {
-            for (Employee employee : EMPLOYEES) {
-                if (employee != null && employee.getSalary() <salary) {
-                    filteredEmployees.add(employee);
-                }
-            }
-        }
-        return filteredEmployees.toArray(new Employee[0]);
-    }
+        boolean found = false;
 
-    private static void printFilteredEmployeesWithLowestSalary( List<Employee> filteredEmployees, int salary) {
-        System.out.println("\nПоиск сотрудников  с зарплатой меньше "+salary+" :");
-        if (filteredEmployees != null && !filteredEmployees.isEmpty()) {
-            for (Employee employee : filteredEmployees) {
+        for (Employee employee : EMPLOYEES) {
+            if (employee != null && employee.getSalary() < salary) {
                 System.out.println("id:" + employee.getId() + " | " + employee.getFullName() + " | зарплата = " + employee.getSalary());
+                found = true;
             }
-        } else {
-            System.out.println("\nСотрудников, с зарплатой, удовлетворяющей параметрам поиска, не нашлось");
+        }
+        if (!found) {
+            System.out.println("В отделе №" + salary + " нет сотрудников.");
         }
     }
 
-    private static Employee[] filterWithHighestSalary( int salary) {
-        List<Employee> filteredEmployees = new ArrayList<>();
-        //if (EMPLOYEES!=null)
-        {
-            for (Employee employee : EMPLOYEES) {
-                if (employee != null && employee.getSalary() >=salary) {
-                    filteredEmployees.add(employee);
-                }
-            }
-        }
-        return filteredEmployees.toArray(new Employee[0]);
-    }
+    private static void printFilteredEmployeesWithHighestSalary(int salary) {
+        System.out.println("\nПоиск сотрудников  с зарплатой больше или равной " + salary + " :");
 
-    private static void printFilteredEmployeesWithHighestSalary( List<Employee> filteredEmployees, int salary) {
-        System.out.println("\nПоиск сотрудников  с зарплатой больше или равной "+salary+" :");
-        if (filteredEmployees != null && !filteredEmployees.isEmpty()) {
-            for (Employee employee : filteredEmployees) {
+        boolean found = false;
+
+        for (Employee employee : EMPLOYEES) {
+            if (employee != null && employee.getSalary() >= salary) {
                 System.out.println("id:" + employee.getId() + " | " + employee.getFullName() + " | зарплата = " + employee.getSalary());
+                found = true;
             }
-        } else {
-            System.out.println("\nСотрудников, с зарплатой, удовлетворяющей параметрам поиска, не нашлось");
+        }
+        if (!found) {
+            System.out.println("В отделе №" + salary + " нет сотрудников.");
         }
     }
 }

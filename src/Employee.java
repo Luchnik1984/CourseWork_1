@@ -62,5 +62,4 @@ public class Employee {
                         " зарплата = " + salary +
                         ';';
     }
-
 }
