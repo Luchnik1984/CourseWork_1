@@ -1,221 +1,63 @@
-import java.util.Random;
-
 public class Main {
 
-    private final static Employee[] EMPLOYEES = new Employee[10];
-
-    private final static Random RANDOM = new Random();
-    private final static String[] NAMES = {"Сергей", "Иван", "Владимир", "Фёдор", "Степан"};
-    private final static String[] PATRONYMICS = {"Иванович", "Петрович", "Сергеевич", "Ильич", "Кузьмич"};
-    private final static String[] SURNAMES = {"Петров", "Ленин", "Иванов", "Сидоров", "Ильф"};
-
-    private final static int[] DEPARTMENTS = {1, 2, 3, 4, 5};
-
-
-    static void initializationEmployees() {
-        for (int i = 0; i < EMPLOYEES.length; i++) {
-
-            String fullName = SURNAMES[RANDOM.nextInt(0, SURNAMES.length)] + " " +
-                    NAMES[RANDOM.nextInt(0, NAMES.length)] + " " +
-                    PATRONYMICS[RANDOM.nextInt(0, PATRONYMICS.length)];
-
-            int department = DEPARTMENTS[RANDOM.nextInt(0, DEPARTMENTS.length)];
-
-            double salary = RANDOM.nextInt(50_000, 100_000);
-
-            EMPLOYEES[i] = new Employee(fullName, department, salary);
-        }
-    }
-
     public static void main(String[] args) {
-        initializationEmployees();
-        printEmployees();
-        System.out.println("\nСумма затрат на ЗП в месяц = " + salaryCostsInMonth());
-        System.out.println("\nСотрудник с наименьшей зарплатой это - " + lookingEmployeeWithLowestSalary());
-        System.out.println("\nСотрудник с наибольшей зарплатой это - " + lookingEmployeeWithHighestSalary());
-        System.out.println("\nСреднее значение зарплат за месяц =  " + calculateAverageSalaryInMonth());
+
+        EmployeeBook book1 = new EmployeeBook();
+        book1.initializationEmployees();
+        book1.printEmployees();
+
+
+        System.out.println("\nСумма затрат на ЗП в месяц = " + book1.salaryCostsInMonth());
+        System.out.println("\nСотрудник с наименьшей зарплатой это - " + book1.lookingEmployeeWithLowestSalary());
+        System.out.println("\nСотрудник с наибольшей зарплатой это - " + book1.lookingEmployeeWithHighestSalary());
+        System.out.println("\nСреднее значение зарплат за месяц =  " + book1.calculateAverageSalaryInMonth());
         System.out.println();
-        printFullName();
+        book1.printFullName();
+        System.out.println();
         int percentageOfSalaryIndexation = 10; // Процент индексации ЗП всех сотрудников
-        indexingAllSalaries(percentageOfSalaryIndexation);
-        printEmployees();
+        book1.indexingAllSalaries(percentageOfSalaryIndexation);
+        book1.printEmployees();
 
         int targetDepartment = 4; // Номер отдела для анализа
         System.out.println("\n Сотрудник с наименьшей зарплатой в отделе №" + targetDepartment + " это - "
-                + lookingEmployeeWithLowestSalaryInDepartment(targetDepartment));
+                + book1.lookingEmployeeWithLowestSalaryInDepartment(targetDepartment));
         System.out.println("\n Сотрудник с наибольшей зарплатой в отделе №" + targetDepartment + " это - "
-                + lookingEmployeeWithHighestSalaryInDepartment(targetDepartment));
+                + book1.lookingEmployeeWithHighestSalaryInDepartment(targetDepartment));
 
         System.out.println("\nСумма затрат на ЗП в отделе №" + targetDepartment + " в месяц = "
-                + salaryCostsInMonthByDepartment(targetDepartment));
+                + book1.salaryCostsInMonthByDepartment(targetDepartment));
 
         System.out.println("\nСреднее значение зарплат в отделе №" + targetDepartment + " в месяц = "
-                + calculateAverageSalaryInMonthByDepartment(targetDepartment));
+                + book1.calculateAverageSalaryInMonthByDepartment(targetDepartment));
 
-        printDepartmentEmployees(targetDepartment);
+        book1.printDepartmentEmployees(targetDepartment);
         percentageOfSalaryIndexation = 20; // Процент индексации зп в отделе
-        indexingSalariesInDepartment(targetDepartment, percentageOfSalaryIndexation);
-        printDepartmentEmployees(targetDepartment);
+        book1.indexingSalariesInDepartment(targetDepartment, percentageOfSalaryIndexation);
+        book1.printDepartmentEmployees(targetDepartment);
+
         int targetSalary = 150000; // число для вывода сотрудников с меньшей и большей или равной этому числу ЗП
-        printFilteredEmployeesWithLowestSalary(targetSalary);
-        printFilteredEmployeesWithHighestSalary(targetSalary);
+        book1.printFilteredEmployeesWithLowestSalary(targetSalary);
+        book1.printFilteredEmployeesWithHighestSalary(targetSalary);
 
-    }
 
-    private static void printEmployees() {
-        for (Employee employee : EMPLOYEES) {
-            System.out.println(employee);
-        }
-    }
 
-    private static double salaryCostsInMonth() {
-        double sum = 0;
-        for (Employee employee : EMPLOYEES) {
-            sum += employee.getSalary();
-        }
-        return sum;
-    }
+       book1.createEmployee("Иванов Иван Иванович",2, 79000);
 
-    private static Employee lookingEmployeeWithLowestSalary() {
-        Employee employeeWithLowestSalary = null;
-        for (Employee employee : EMPLOYEES) {
-            if (employeeWithLowestSalary == null || employee.getSalary() < employeeWithLowestSalary.getSalary()) {
-                employeeWithLowestSalary = employee;
-            }
-        }
-        return employeeWithLowestSalary;
-    }
+       book1.deleteEmployee(7);
+       book1.deleteEmployee(5);
+       System.out.println(" \nРаспечатываем книгу сотрудников с учётом удалённых сотрудников:\n");
+       book1.printEmployees();
 
-    private static Employee lookingEmployeeWithHighestSalary() {
-        Employee employeeWithHighestSalary = null;
-        for (Employee employee : EMPLOYEES) {
-            if (employeeWithHighestSalary == null || employee.getSalary() > employeeWithHighestSalary.getSalary()) {
-                employeeWithHighestSalary = employee;
-            }
-        }
-        return employeeWithHighestSalary;
-    }
+       book1.createEmployee("Иванов Иван Иванович",3, 99000);
+       book1.createEmployee("Иванов Иван Иванович",2, 95000);
+       book1.createEmployee("Петров Пётр Петрович",1, 91000);
 
-    private static double calculateAverageSalaryInMonth() {
-
-        return salaryCostsInMonth() / EMPLOYEES.length;
-    }
-
-    private static void printFullName() {
-        for (Employee employee : EMPLOYEES) {
-            System.out.println(employee.getFullName());
-        }
-    }
-
-    private static void indexingAllSalaries(double indexPercentage) {
-        for (Employee employee : EMPLOYEES) {
-            employee.setSalary(Math.ceil(employee.getSalary() * (1 + (indexPercentage) / 100)));
-        }
-    }
-
-    private static Employee lookingEmployeeWithLowestSalaryInDepartment(int departmentNumber) {
-        Employee employeeWithLowestSalary = null;
-
-        for (Employee employee : EMPLOYEES) {
-            if (employee != null && employee.getDepartment() == departmentNumber) {
-                if (employeeWithLowestSalary == null || employee.getSalary() < employeeWithLowestSalary.getSalary()) {
-                    employeeWithLowestSalary = employee;
-                }
-            }
-        }
-
-        return employeeWithLowestSalary;
-    }
-
-    private static Employee lookingEmployeeWithHighestSalaryInDepartment(int departmentNumber) {
-        Employee employeeWithHighestSalary = null;
-
-        for (Employee employee : EMPLOYEES) {
-            if (employee != null && employee.getDepartment() == departmentNumber) {
-                if (employeeWithHighestSalary == null || employee.getDepartment() == departmentNumber && employee.getSalary() > employeeWithHighestSalary.getSalary()) {
-                    employeeWithHighestSalary = employee;
-                }
-            }
-        }
-        return employeeWithHighestSalary;
-    }
-
-    private static double salaryCostsInMonthByDepartment(int departmentNumber) {
-        double sum = 0;
-        for (Employee employee : EMPLOYEES) {
-            if (employee != null && employee.getDepartment() == departmentNumber) {
-                sum += employee.getSalary();
-            }
-        }
-        return sum;
+       System.out.println(" \nРаспечатываем книгу сотрудников с учётом добавленных сотрудников:\n");
+       book1.printEmployees();
+       book1.printFilteredEmployeeById(book1.searchEmployeeById(3));
     }
 
 
-    private static double calculateAverageSalaryInMonthByDepartment(int departmentNumber) {
-        int employeeInDepartment = 0;
-        for (Employee employee : EMPLOYEES) {
-            if (employee != null && employee.getDepartment() == departmentNumber) {
-                employeeInDepartment++;
-            }
-        }
-        return salaryCostsInMonthByDepartment(departmentNumber) / employeeInDepartment;
-    }
-
-
-    private static void indexingSalariesInDepartment(int departmentNumber, double indexPercentage) {
-        for (Employee employee : EMPLOYEES) {
-            if (employee != null && employee.getDepartment() == departmentNumber) {
-                employee.setSalary(Math.ceil(employee.getSalary() * (1 + (indexPercentage) / 100)));
-            }
-        }
-    }
-
-    private static void printDepartmentEmployees(int department) {
-        System.out.println("\nОтдел №" + department);
-        boolean found = false;
-
-        for (Employee employee : EMPLOYEES) {
-            if (employee != null && employee.getDepartment() == department) {
-                System.out.println("id:" + employee.getId() + " | " + employee.getFullName() + " | зарплата = " + employee.getSalary());
-                found = true;
-            }
-        }
-        if (!found) {
-            System.out.println("В отделе №" + department + " нет сотрудников.");
-        }
-    }
-
-    private static void printFilteredEmployeesWithLowestSalary(int salary) {
-        System.out.println("\nПоиск сотрудников  с зарплатой меньше " + salary + " :");
-
-        boolean found = false;
-
-        for (Employee employee : EMPLOYEES) {
-            if (employee != null && employee.getSalary() < salary) {
-                System.out.println("id:" + employee.getId() + " | " + employee.getFullName() + " | зарплата = " + employee.getSalary());
-                found = true;
-            }
-        }
-        if (!found) {
-            System.out.println("Сотрудников с зарплатой меньше " + salary + " не найдено");
-        }
-    }
-
-    private static void printFilteredEmployeesWithHighestSalary(int salary) {
-        System.out.println("\nПоиск сотрудников  с зарплатой больше или равной " + salary + " :");
-
-        boolean found = false;
-
-        for (Employee employee : EMPLOYEES) {
-            if (employee != null && employee.getSalary() >= salary) {
-                System.out.println("id:" + employee.getId() + " | " + employee.getFullName() + " | зарплата = " + employee.getSalary());
-                found = true;
-            }
-        }
-        if (!found) {
-            System.out.println("Сотрудников с зарплатой больше или равной " + salary + " не найдено.");
-        }
-    }
 }
 
 
