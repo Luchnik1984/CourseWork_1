@@ -11,7 +11,7 @@ public class Employee {
     private double salary;
 
     public Employee(String fullName, int department, double salary) {
-        id = idCounter++;
+        this.id = idCounter++;
         this.fullName = fullName;
         this.department = department;
         this.salary = salary;
@@ -32,6 +32,9 @@ public class Employee {
     public int getId() {
         return id;
     }
+
+
+
 
     public void setDepartment(int department) {
         this.department = department;
